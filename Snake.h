@@ -20,7 +20,7 @@ public:
     SnakeHead(std::string &str, sType x, sType y, sType width, sType height) : _screen(&str), _cX(x), _cY(y), _screenWidth(width), _screenHeight(height) {}
     void move(sType x, sType y){
         // move head
-        std::cout << "Head:\n";
+        //std::cout << "Head:\n";
         
         //std::cout << "cX: " << _cX << '\n';
         //std::cout << "cY: " << _cY << '\n';
@@ -33,7 +33,7 @@ public:
         
         auto size = _snakeBody.size();
         for(sType i = 0; i < size; ++i){
-            std::cout << "Body:[" << i << "]\n";
+            //std::cout << "Body:[" << i << "]\n";
             sType &cBodyX = _snakeBody[i]->_cX;
             sType &cBodyY = _snakeBody[i]->_cY;
             //std::cout << "cBodyX: " << cBodyX << '\n';
@@ -51,8 +51,8 @@ public:
     }
 private:
     void moveInScreen(sType pX, sType pY, sType nX, sType nY, char chr){
-        (*_screen)[nX+1+(_screenWidth*nY)] = chr;
-        (*_screen)[pX+1+(_screenWidth*pY)] = ' ';
+        (*_screen)[nX+(nY)+(_screenWidth*nY)] = chr;
+        (*_screen)[pX+(pY)+(_screenWidth*pY)] = ' ';
     }
 
 private:
