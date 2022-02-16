@@ -37,6 +37,13 @@ public:
         
     }
 public:
+    void createBody(){
+        srand(time(0));
+        auto xRand = rand()%(_screenWidth-1);
+        auto yRand = rand()%(_screenHeight-1);
+        auto newBody = new SnakeBody(xRand, yRand);
+        _uSnakeBody.push_back(newBody);
+    }
     void moveUp(){
         move(_cX, _cY-1);
     }
@@ -50,7 +57,7 @@ public:
         move(_cX+1, _cY);
     }
 
-    void checkAttachForBody(){
+    bool checkAttachForBody(){
         auto size = _uSnakeBody.size();
         int x = 0,
             y = 0,
@@ -68,7 +75,9 @@ public:
         }
         if(isTrue){
             attach(_uSnakeBody[i]);
+            return true;
         }
+        return false;
     }
 private:
     // changes _cY

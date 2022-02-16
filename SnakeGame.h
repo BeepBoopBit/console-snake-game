@@ -10,31 +10,36 @@ private:
 
 public: // Constructors
     SnakeGame(){
-        _screenHeight = 10;
         _screenWidth = 20;
+        _screenHeight = 10;
+        _head = new SnakeHead(_screen, 2, 1, _screenWidth, _screenHeight);
     }
 
 public:
     void initGame(){
+
+        // create initial body
+        _head->createBody();
+
         setupMap();
 
-        // Set-up Threads
-
+        // --- Set-up Threads --- //
         // printing
-        std::thread tPrintScreen(&printScreen);
+        std::thread tPrintScreen(&printScreen, this);
         tPrintScreen.detach();
 
         // keyboard Events
         sType *keyboardPressed = new sType(4);
-        std::thread tKeyboardEvent(&keyboardEvent, keyboardPressed);
+        std::thread tKeyboardEvent(&keyboardEvent, this, keyboardPressed);
         tKeyboardEvent.detach();
-    
+
         // moving + checking if there is something adjacent
-        std::thread tMoveHead(&moveHead, keyboardPressed);
+        std::thread tMoveHead(&moveHead, this, keyboardPressed);
         tMoveHead.detach();
 
-
-    
+        while(*keyboardPressed != 'x'){
+        }
+        inGame = false;
     }
 
 
@@ -73,7 +78,10 @@ private: // movements
             }else if(*keyboardPressed == 4){
                 _head->moveRight();
             }
-            _head->checkAttachForBody(); 
+            if(_head->checkAttachForBody()){
+                // create new body
+                _head->createBody();
+            } 
         }
     }
 
