@@ -95,7 +95,7 @@ private:
     }
     void gameover(){
         inGame = false;
-        system("cls");
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
         std::cout << "Gameover" << std::endl;
         system("pause");
         exit(0);
