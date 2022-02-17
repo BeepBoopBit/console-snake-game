@@ -49,15 +49,15 @@ private: // movements
     void changeMovement(sType *keyboardInput){
         while(inGame){
             char keyIn = _getwch();
-            if(keyIn == 'w'){
+            if(keyIn == 'w' && *keyboardInput != 3){
                 *keyboardInput = 1;
-            }else if(keyIn == 'a'){
+            }else if(keyIn == 'a' && *keyboardInput != 4){
                 *keyboardInput = 2;
-            }else if(keyIn == 's'){
+            }else if(keyIn == 's' && *keyboardInput != 1){
                 *keyboardInput = 3;
-            }else if(keyIn == 'd'){
+            }else if(keyIn == 'd' && *keyboardInput != 2){
                 *keyboardInput = 4;
-            }else if(keyIn == 'x'){
+            }else if(keyIn == 'x' ){
                 *keyboardInput = 5;
                 break;
             }
@@ -93,6 +93,7 @@ private:
     void gameover(){
         inGame = false;
         std::cout << "Gameover" << std::endl;
+        system("pause");
         exit(0);
     }
 private:
