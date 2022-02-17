@@ -8,7 +8,7 @@ private:
     typedef std::string::size_type sType;
 
 public:
-    SnakeBody(sType x, sType y) : _cX(x), _cY(y){}
+    SnakeBody(sType x, sType y) : _cX(x), _cY(y), _pX(x), _pY(y){}
     sType _cX, _cY;
     // Needs implementing
     sType _pX, _pY;
@@ -36,13 +36,12 @@ public:
         }
         _screen->operator[](x+(y)+(_screenWidth*y)) = 'P';
         createBody();
-        oFile.open("log.txt", std::ios_base::app);
     }
 public:
     void createBody(){
         srand(time(0));
-        auto xRand = rand()%(_screenWidth-1);
-        auto yRand = rand()%(_screenHeight-1);
+        auto xRand = (rand()%(_screenWidth-2))+1;
+        auto yRand = (rand()%(_screenHeight-2))+1;
         auto newBody = new SnakeBody(xRand, yRand);
         _uSnakeBody.push_back(newBody);
         _screen->operator[](xRand+(yRand)+(_screenWidth*yRand)) = 'O';
@@ -78,11 +77,9 @@ public:
             }
         }
         if(isTrue){
-            oFile << "Data:\n";
             attach(_uSnakeBody[i]);
             uDetach(iterator_uSnakeBody);
             createBody();
-            oFile << "\n\n---------------\n\n";
         }
     }
 private:
@@ -125,7 +122,6 @@ private:
         if(_aSnakeBody.empty()){
             body->_cX = _pX;
             body->_cY = _pY;
-            oFile << "Empty Attachment at [" << _pX << ',' << _pY << "]\n";
         }else{
             auto beforeLast = _aSnakeBody.size() - 1;
             auto tempX = _aSnakeBody[beforeLast]->_pX, 
@@ -134,13 +130,11 @@ private:
             body->_cY = tempY;
             body->_pX = tempX;
             body->_pY = tempY;
-            oFile << "New Attachment at [" << tempX << ',' << tempY << "]\n";
         }
         _aSnakeBody.push_back(body);
     }
     void uDetach(std::vector<SnakeBody*>::iterator body){
         _uSnakeBody.erase(body);
-        oFile << "Detached a Body\n";
     }
 private:
     void moveInScreen(sType pX, sType pY, sType nX, sType nY, char chr){
@@ -155,7 +149,6 @@ private:
     sType _cX, _cY;
     sType _pX, _pY;
     sType _screenWidth, _screenHeight;
-    std::ofstream oFile;
 };
 
 #endif // SNAKE_H
