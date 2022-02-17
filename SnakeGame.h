@@ -18,11 +18,8 @@ public: // Constructors
 
 public:
     void initGame(){
-        // create initial body
-        _head->createBody();
-
-        sType *keyboardInput = new sType(4);
         
+        sType *keyboardInput = new sType(4);
         // Printing Thread
         std::thread printThread(&printScreen, this);
         printThread.detach();

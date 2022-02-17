@@ -35,7 +35,7 @@ public:
             std::cout << "When Initializing the position of the SnakeHead, Make sure that it has 1 more space on his left side (for X)";
         }
         _screen->operator[](x+(y)+(_screenWidth*y)) = 'P';
-        
+        createBody();
     }
 public:
     void createBody(){
@@ -44,6 +44,7 @@ public:
         auto yRand = rand()%(_screenHeight-1);
         auto newBody = new SnakeBody(xRand, yRand);
         _uSnakeBody.push_back(newBody);
+        _screen->operator[](xRand+(yRand)+(_screenWidth*yRand)) = 'O';
     }
     void moveUp(){
         move(_cX, _cY-1);
