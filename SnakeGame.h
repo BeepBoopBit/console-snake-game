@@ -40,6 +40,7 @@ private: // screen stuffs
     void printScreen(){
         while(inGame){
             std::cout << _screen;
+            showScore();
             std::this_thread::sleep_for(std::chrono::milliseconds(200));
             system("cls");
         }
@@ -75,7 +76,9 @@ private: // movements
             }else if(*keyboardInput == 4){
                 _head->moveRight();
             }
-            _head->checkAttachForBody();
+            if(_head->checkAttachForBody()){
+                ++score;
+            }
             if(_head->checkOutOfBounce()){
                 gameover();
             }
@@ -100,11 +103,20 @@ private:
         system("pause");
         exit(0);
     }
+    void showScore(){
+        moveCursor(_screenWidth+2, 1);
+        std::cout << "SCORE: " << score;
+        moveCursor(1, _screenHeight+2);
+    }
+    void moveCursor(int x, int y){
+        std::cout << "\033[" << y << ';' << x << "H"; 
+    }
 private:
     bool inGame = true;
     sType _screenHeight, _screenWidth;
     SnakeHead *_head;
     std::string _screen;
+    int score = 0;
 };
 
 

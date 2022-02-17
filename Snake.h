@@ -59,7 +59,7 @@ public:
         move(_cX+1, _cY);
     }
 
-    void checkAttachForBody(){
+    bool checkAttachForBody(){
         auto size = _uSnakeBody.size();
         int x = 0,
             y = 0,
@@ -80,7 +80,9 @@ public:
             attach(_uSnakeBody[i]);
             uDetach(iterator_uSnakeBody);
             createBody();
+            return true;
         }
+        return false;
     }
     bool checkOutOfBounce(){
         bool xPosition = (_cX >= _screenWidth-1) || (_cX == 0);
