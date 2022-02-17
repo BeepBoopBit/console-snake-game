@@ -11,7 +11,7 @@ private:
 public: // Constructors
     SnakeGame(){
         _screenWidth = 20;
-        _screenHeight = 20;
+        _screenHeight = 10;
         setupMap();
         _head = new SnakeHead(&_screen, 2, 1, _screenWidth, _screenHeight);
     }
@@ -79,6 +79,9 @@ private: // movements
             if(_head->checkOutOfBounce()){
                 gameover();
             }
+            if(_head->checkBodyCollision()){
+                gameover();
+            }
             std::this_thread::sleep_for(std::chrono::milliseconds(200));
         }
     }
@@ -92,6 +95,7 @@ private:
     }
     void gameover(){
         inGame = false;
+        system("cls");
         std::cout << "Gameover" << std::endl;
         system("pause");
         exit(0);

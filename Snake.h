@@ -90,6 +90,17 @@ public:
         }
         return false;
     }
+    bool checkBodyCollision(){
+        auto size = _aSnakeBody.size();
+        for(int i = 0; i < size; ++i){
+            auto tempX = _aSnakeBody[i]->_cX,
+                 tempY = _aSnakeBody[i]->_cY; 
+            if((tempX == _cX) && (tempY == _cY)){
+                return true;
+            }
+        }
+        return false;
+    }
 private:
     // changes _cY
     void move(sType x, sType y){
