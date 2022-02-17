@@ -76,6 +76,9 @@ private: // movements
                 _head->moveRight();
             }
             _head->checkAttachForBody();
+            if(_head->checkOutOfBounce()){
+                gameover();
+            }
             std::this_thread::sleep_for(std::chrono::milliseconds(200));
         }
     }
@@ -87,7 +90,11 @@ private:
         }
         _screen += std::string(_screenWidth, '#') + '\n';
     }
-
+    void gameover(){
+        inGame = false;
+        std::cout << "Gameover" << std::endl;
+        exit(0);
+    }
 private:
     bool inGame = true;
     sType _screenHeight, _screenWidth;

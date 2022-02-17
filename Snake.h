@@ -82,6 +82,14 @@ public:
             createBody();
         }
     }
+    bool checkOutOfBounce(){
+        bool xPosition = (_cX >= _screenWidth) || (_cX == 0);
+        bool yPosition = (_cY >= _screenHeight) || (_cY == 0);
+        if(xPosition || yPosition){
+            return true;
+        }
+        return false;
+    }
 private:
     // changes _cY
     void move(sType x, sType y){
