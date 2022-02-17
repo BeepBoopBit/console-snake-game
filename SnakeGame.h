@@ -11,7 +11,7 @@ private:
 public: // Constructors
     SnakeGame(){
         _screenWidth = 20;
-        _screenHeight = 10;
+        _screenHeight = 20;
         setupMap();
         _head = new SnakeHead(&_screen, 2, 1, _screenWidth, _screenHeight);
     }
