@@ -36,6 +36,7 @@ public:
         }
         _screen->operator[](x+(y)+(_screenWidth*y)) = 'P';
         createBody();
+        oFile.open("log.txt", std::ios_base::app);
     }
 public:
     void createBody(){
@@ -59,13 +60,14 @@ public:
         move(_cX+1, _cY);
     }
 
-    bool checkAttachForBody(){
+    void checkAttachForBody(){
         auto size = _uSnakeBody.size();
         int x = 0,
             y = 0,
             i = 0;
+        auto iterator_uSnakeBody = _uSnakeBody.begin();
         bool isTrue = false;
-        for(; i < size; ++i){
+        for(; i < size; ++i, ++iterator_uSnakeBody){
             int tempX = _uSnakeBody[i]->_cX,
                 tempY = _uSnakeBody[i]->_cY;
             if(tempX == _cX && tempY == _cY){
@@ -76,10 +78,12 @@ public:
             }
         }
         if(isTrue){
+            oFile << "Data:\n";
             attach(_uSnakeBody[i]);
-            return true;
+            uDetach(iterator_uSnakeBody);
+            createBody();
+            oFile << "\n\n---------------\n\n";
         }
-        return false;
     }
 private:
     // changes _cY
@@ -121,6 +125,7 @@ private:
         if(_aSnakeBody.empty()){
             body->_cX = _pX;
             body->_cY = _pY;
+            oFile << "Empty Attachment at [" << _pX << ',' << _pY << "]\n";
         }else{
             auto beforeLast = _aSnakeBody.size() - 1;
             auto tempX = _aSnakeBody[beforeLast]->_pX, 
@@ -129,8 +134,13 @@ private:
             body->_cY = tempY;
             body->_pX = tempX;
             body->_pY = tempY;
+            oFile << "New Attachment at [" << tempX << ',' << tempY << "]\n";
         }
         _aSnakeBody.push_back(body);
+    }
+    void uDetach(std::vector<SnakeBody*>::iterator body){
+        _uSnakeBody.erase(body);
+        oFile << "Detached a Body\n";
     }
 private:
     void moveInScreen(sType pX, sType pY, sType nX, sType nY, char chr){
@@ -145,6 +155,7 @@ private:
     sType _cX, _cY;
     sType _pX, _pY;
     sType _screenWidth, _screenHeight;
+    std::ofstream oFile;
 };
 
 #endif // SNAKE_H

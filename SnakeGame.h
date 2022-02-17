@@ -18,7 +18,7 @@ public: // Constructors
 
 public:
     void initGame(){
-        
+
         sType *keyboardInput = new sType(4);
         // Printing Thread
         std::thread printThread(&printScreen, this);
@@ -75,9 +75,7 @@ private: // movements
             }else if(*keyboardInput == 4){
                 _head->moveRight();
             }
-            if(_head->checkAttachForBody()){
-                _head->createBody();
-            }
+            _head->checkAttachForBody();
             std::this_thread::sleep_for(std::chrono::milliseconds(200));
         }
     }
