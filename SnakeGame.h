@@ -12,84 +12,85 @@ public: // Constructors
     SnakeGame(){
         _screenWidth = 20;
         _screenHeight = 10;
-        _head = new SnakeHead(_screen, 2, 1, _screenWidth, _screenHeight);
+        setupMap();
+        _head = new SnakeHead(&_screen, 2, 1, _screenWidth, _screenHeight);
     }
 
 public:
     void initGame(){
-
         // create initial body
         _head->createBody();
 
-        setupMap();
+        sType *keyboardInput = new sType(4);
+        
+        // Printing Thread
+        std::thread printThread(&printScreen, this);
+        printThread.detach();
 
-        // --- Set-up Threads --- //
-        // printing
-        std::thread tPrintScreen(&printScreen, this);
-        tPrintScreen.detach();
+        // MovementThread
+        std::thread changeMovementThread(&changeMovement, this, keyboardInput);
+        changeMovementThread.detach();
 
-        // keyboard Events
-        sType *keyboardPressed = new sType(4);
-        std::thread tKeyboardEvent(&keyboardEvent, this, keyboardPressed);
-        tKeyboardEvent.detach();
+        std::thread moveSnakeThread(&moveSnake, this, keyboardInput);
+        moveSnakeThread.detach();
 
-        // moving + checking if there is something adjacent
-        std::thread tMoveHead(&moveHead, this, keyboardPressed);
-        tMoveHead.detach();
-
-        while(*keyboardPressed != 'x'){
+        while(*keyboardInput != 5){
         }
         inGame = false;
     }
 
-
-private: // movements
+private: // screen stuffs
     void printScreen(){
         while(inGame){
             std::cout << _screen;
-            // to lower the amount of printing
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
-            // kind of slow
+            std::this_thread::sleep_for(std::chrono::milliseconds(200));
             system("cls");
         }
     }
-    void keyboardEvent(sType *keyboardPressed){ 
+
+private: // movements
+    void changeMovement(sType *keyboardInput){
         while(inGame){
-            auto keyEvent = _getwch();
-            if(keyEvent == 'w'){
-                *keyboardPressed = 1;
-            }else if(keyEvent == 'a'){
-                *keyboardPressed = 2;
-            }else if(keyEvent == 's'){
-                *keyboardPressed = 3;
-            }else if(keyEvent == 'd'){
-                *keyboardPressed = 4;
+            char keyIn = _getwch();
+            if(keyIn == 'w'){
+                *keyboardInput = 1;
+            }else if(keyIn == 'a'){
+                *keyboardInput = 2;
+            }else if(keyIn == 's'){
+                *keyboardInput = 3;
+            }else if(keyIn == 'd'){
+                *keyboardInput = 4;
+            }else if(keyIn == 'x'){
+                *keyboardInput = 5;
+                break;
             }
+            std::cout << *keyboardInput << std::endl;
         }
     }
-    void moveHead(sType *keyboardPressed){
+    void moveSnake(sType *keyboardInput){
         while(inGame){
-            if(*keyboardPressed == 1){
+            if(*keyboardInput == 1){
                 _head->moveUp();
-            }else if(*keyboardPressed == 2){
+            }else if(*keyboardInput == 2){
                 _head->moveLeft();
-            }else if(*keyboardPressed == 3){
+            }else if(*keyboardInput == 3){
                 _head->moveDown();
-            }else if(*keyboardPressed == 4){
+            }else if(*keyboardInput == 4){
                 _head->moveRight();
             }
             if(_head->checkAttachForBody()){
-                // create new body
                 _head->createBody();
-            } 
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(200));
         }
     }
-
 private:
     void setupMap(){
-        for(int i = 0; i < _screenHeight; ++i){
-            _screen = std::string(_screenWidth, ' ') + '\n';
+        _screen += std::string(_screenWidth, '#') + '\n';
+        for(int i = 0; i < _screenHeight-2; ++i){
+            _screen += '#' + std::string(_screenWidth-2, ' ') + '#' + '\n';
         }
+        _screen += std::string(_screenWidth, '#') + '\n';
     }
 
 private:

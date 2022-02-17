@@ -19,7 +19,7 @@ private:
     typedef std::string::size_type sType;
 
 public:
-    SnakeHead(std::string &str, sType x, sType y, sType width, sType height) : _screen(&str), _screenWidth(width), _screenHeight(height) {
+    SnakeHead(std::string *str, sType x, sType y, sType width, sType height) : _screen(str), _screenWidth(width), _screenHeight(height) {
         if(x > 1 && x < _screenWidth){
             _cX = x;
             _pX = x-1;
@@ -34,6 +34,7 @@ public:
             std::cout << "OUT OF BOUNCE.\n";
             std::cout << "When Initializing the position of the SnakeHead, Make sure that it has 1 more space on his left side (for X)";
         }
+        _screen->operator[](x+(y)+(_screenWidth*y)) = 'P';
         
     }
 public:
