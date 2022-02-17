@@ -83,8 +83,8 @@ public:
         }
     }
     bool checkOutOfBounce(){
-        bool xPosition = (_cX >= _screenWidth) || (_cX == 0);
-        bool yPosition = (_cY >= _screenHeight) || (_cY == 0);
+        bool xPosition = (_cX >= _screenWidth-1) || (_cX == 0);
+        bool yPosition = (_cY >= _screenHeight-1) || (_cY == 0);
         if(xPosition || yPosition){
             return true;
         }
