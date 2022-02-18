@@ -1,0 +1,3 @@
+KING WATERMELON: 100
+Him: 50
+Her: 50
