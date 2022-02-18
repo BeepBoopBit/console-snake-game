@@ -8,5 +8,7 @@
 #include <chrono>
 #include <vector>
 #include <fstream>
+#include <algorithm>
+
 
 #endif // INCLUDES_H

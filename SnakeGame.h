@@ -24,7 +24,7 @@ public:
         std::thread printThread(&printScreen, this);
         printThread.detach();
 
-        // MovementThread
+        // Movement Threads
         std::thread changeMovementThread(&changeMovement, this, keyboardInput);
         changeMovementThread.detach();
 
@@ -77,7 +77,7 @@ private: // movements
                 _head->moveRight();
             }
             if(_head->checkAttachForBody()){
-                ++score;
+                ++_score;
             }
             if(_head->checkOutOfBounce()){
                 gameover();
@@ -99,24 +99,83 @@ private:
     void gameover(){
         inGame = false;
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
-        std::cout << "Gameover" << std::endl;
+        std::cout << "GAMEOVER!! Your Score is: " << _score << std::endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        saveScore();
+        showLeadeboard();
         system("pause");
         exit(0);
     }
     void showScore(){
         moveCursor(_screenWidth+2, 1);
-        std::cout << "SCORE: " << score;
+        std::cout << "SCORE: " << _score;
         moveCursor(1, _screenHeight+2);
     }
     void moveCursor(int x, int y){
         std::cout << "\033[" << y << ';' << x << "H"; 
+    }
+    
+    // not yet done
+    void showLeadeboard(){
+        std::ifstream iFile("scoreboard.txt");
+        if(iFile.is_open()){
+            std::string tempStr;
+            while(std::getline(iFile, tempStr)){
+                std::cout << tempStr << std::endl;
+            }
+        }else{
+            std::cout << "scoreboard.txt isn't found" << std::endl;
+            exit(-1);
+        }
+    }
+    void saveScore(){
+        std::ifstream iFile("scoreboard.txt");
+        if(iFile.is_open()){
+            std::cout << "Enter your name: ";
+            std::string username;
+            std::getline(std::cin, username);
+
+            // separate word, separator, and number
+            std::vector<std::string> names = {username};
+            std::vector<int> scores = {_score};
+
+            std::string tempNames,separator;
+            int tempScores;
+            // assumes that scoreboard.txt is in correct order
+            while(iFile >> tempNames >> separator >> tempScores){
+                names.push_back(tempNames);
+                scores.push_back(tempScores);
+            }
+
+            // sort vector
+            auto scoreSize = scores.size();
+            for(int i = 0; i < scoreSize; ++i){
+                for(int j = 0; j < scoreSize-i-1; ++j){
+                    if(scores[j] < scores[j+1]){
+                        std::swap(scores[j], scores[j+1]);
+                        std::swap(names[j], names[j+1]);
+                    }
+                }
+            }
+
+            std::ofstream oFile("scoreboard.txt");
+            if(oFile.is_open()){
+                for(int i = 0; i < names.size(); ++i){
+                    oFile << names[i] << " : " << scores[i] << '\n';
+                }
+            }else{
+                std::cout << "scoreboard.txt isn't found" << std::endl;
+                exit(-1);
+            }
+        }else{
+        }
     }
 private:
     bool inGame = true;
     sType _screenHeight, _screenWidth;
     SnakeHead *_head;
     std::string _screen;
-    int score = 0;
+    int _score = 0;
 };
 
 
